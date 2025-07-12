@@ -1,0 +1,95 @@
+{% extends 'layouts/page.html' %}
+
+{% block content %}
+<div class="notifications-container">
+    <h1>Notifications</h1>
+    
+    {% if notifications %}
+        <div class="notifications-list">
+            {% for notification in notifications %}
+                <div class="notification-item {% if not notification.is_read %}unread{% endif %}">
+                    <div class="notification-content">
+                        <div class="notification-text">{{ notification.text }}</div>
+                        <div class="notification-meta">
+                            <span class="notification-sender">From: {{ notification.sender.username }}</span>
+                            <span class="notification-time">{{ notification.created_at|timesince }} ago</span>
+                        </div>
+                    </div>
+                    <div class="notification-actions">
+                        {% if notification.question %}
+                            <a href="{% url 'question' notification.question.id %}" class="view-link">View</a>
+                        {% endif %}
+                        {% if not notification.is_read %}
+                            <a href="{% url 'mark-notification-read' notification.id %}" class="mark-read-link">Mark as read</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You have no notifications.</p>
+    {% endif %}
+</div>
+
+<style>
+    .notifications-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .notifications-list {
+        margin-top: 20px;
+    }
+    
+    .notification-item {
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .notification-item.unread {
+        background-color: #f0f7ff;
+    }
+    
+    .notification-content {
+        flex: 1;
+    }
+    
+    .notification-text {
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    
+    .notification-meta {
+        font-size: 12px;
+        color: #666;
+        display: flex;
+        gap: 15px;
+    }
+    
+    .notification-actions {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .view-link, .mark-read-link {
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .view-link {
+        background-color: #4CAF50;
+        color: white;
+    }
+    
+    .mark-read-link {
+        background-color: #2196F3;
+        color: white;
+    }
+</style>
+{% endblock %}
